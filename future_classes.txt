@@ -1,0 +1,4 @@
+** Note Future Classes in Frex micro-framework **
+
+- Presentation => representing content-type as json, text, html
+- Server => adobting rerequest and response method
