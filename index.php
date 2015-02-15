@@ -4,15 +4,13 @@ require 'libs/Frex/Frex.php';
 
 // initialize the app
 $app = new Frex();
-$app->load('Database.php');
 
 // set routes
-$app->set('/', 'MainController:main'); // pass controller
-$app->set('/about', 'MainController:about'); // pass another controller
-$app->set('/user', function() { // pass function
-	echo 'You are user!';
-});
-$app->set('/contact', function() { // pass another function
+$app->set('/');
+$app->set('/main', 'MainController:main'); // pass controller's method 
+$app->set('/main/about', 'MainController:about'); // pass anthoer controller's method
+$app->set('/user/:id', 'UserController:getUser'); // pass controller's method with argument
+$app->set('/contact', function() { // pass a function
 	echo 'You can contact me!';
 });
 

@@ -1,6 +1,5 @@
 <?php
 
-
 Class MainController {
 
 	public function main() {
@@ -10,6 +9,7 @@ Class MainController {
 	public function about() {
 		echo 'About me ..';
 	}
+	
 }
 
 ?>
