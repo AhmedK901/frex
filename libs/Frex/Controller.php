@@ -2,67 +2,42 @@
 
 /**
  *	Class: Controller Class
- *	Handling controllers in Frex micro-framework
+ *	Handling controllers in Frex micro-framework and prepare all models to be used for them
 **/
+
+// model is required as a superclass for all models available on app
+require 'Model.php';
 
 Class Controller {
 
 	// private properties and methods
-	private $_controllers_files = array();
-	private $_controllers_dir;
-	private function require_controller ($controller) {
-		require 'controllers/'.$controller;
+	private $_models_files = array();
+	private function require_models() {
+		
+		// check if there is any model available
+		if (count($this->_models_files) > 0) {
+
+			// require all models available
+			foreach($this->_models_files as $index => $model) {
+				require 'models/'.$model;
+			} 
+		}
+		
+	}
+	private function get_models() {
+		$this->_models_files = array_diff(scandir('models'), array('..','.'));
 	}
 
 	// constructor
 	public function Controller() {
-		$this->_controllers_dir = 'controllers';
-		$this->_controllers_files = array_diff(scandir($this->_controllers_dir), array('..', '.'));
+
+		// get all models
+		$this->get_models();
+
+		// re
+		$this->require_models();
 	}
 
-	// implement method's class
-	public function implement($implementation_method_pattern, $argument=null) {
 
-		// prepare controller and method names
-		$split_call_chunks = explode(':', $implementation_method_pattern);
-		$controller_name = $split_call_chunks[0];
-		$method_name = $split_call_chunks[1];
-
-		// initial value for checking of passed controllers
-		$is_any_controller_pass = false;
-		$controller_file_index = 0;
-
-		foreach($this->_controllers_files as $index => $controller_file) {
-
-			// increase controller index value
-			$controller_file_index++;
-
-			// check for controller if it's exist
-			if ($controller_name == substr($controller_file, 0, -4)) {
-				
-				// there is one controller at least is passed
-				if ($is_any_controller_pass == false) {
-					$is_any_controller_pass = true;
-				}
-
-				// require controller from controllers' directory
-				$this->require_controller($controller_file);
-
-				// implement controller method
-				$controller = new $controller_name();
-				$controller->$method_name($argument);
-
-			} else {
-
-				// write error message if controller not exist (no controller is passed)
-				if ($is_any_controller_pass == false && count($this->_controllers_files) == $controller_file_index) {
-					echo 'Controller is not exist';
-				}
-
-			}
-
-		}
-
-	}
 }
 ?>

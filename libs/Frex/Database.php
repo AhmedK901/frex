@@ -5,6 +5,9 @@
  *	Handling MySQL database stuff in Frex micro-framework
 **/
 
+// include database configuration file
+include 'database_config.php';
+
 Class Database {
 
 	// database setting
@@ -15,13 +18,25 @@ Class Database {
 	private $db_connect;
 	private $expected_query = '';
 
-	// constructor
-	public function Database($host, $user, $pass, $dbname) {
-		$this->db_host = $host;
-		$this->db_name = $dbname;
-		$this->db_user = $user;
-		$this->db_pass = $pass;
+	public function test() {
+		echo 'test .. ';
+	}
 
+	// constructor
+	public function Database() {
+
+		// set mysql configuration values
+		$this->db_host = DB_HOST;
+		$this->db_name = DB_NAME;
+		$this->db_user = DB_USER;
+		$this->db_pass = DB_PASS;
+
+		// make a connection
+		$this->connect();
+	}
+
+	public function check() {
+		echo $this->db_connect. '/';
 	}
 
 	// connect to database

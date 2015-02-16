@@ -1,9 +1,9 @@
 <?php
 
-Class UserController {
+Class UserController extends Controller {
 
-	public function getUser($arg) {
-		echo "User ID " . $arg;
+	public function printUserInfo($id) {
+		UserModel::getUserID($id);
 	}
 
 }

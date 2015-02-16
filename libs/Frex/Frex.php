@@ -8,13 +8,12 @@
 Class Frex {
 
 	// private properties and methods
-	private $_controller_class;
 	private $_route_uri = array();
 	private $_route_methods = array();
 	private $_route_method_arguments = array();
 	private $_is_any_set_uri = false;
 
-	private function getGetUri () {
+	private function getGetUri() {
 		return isset($_GET['uri']) ? '/'. $_GET['uri'] : '/';
 	}
 
@@ -65,10 +64,58 @@ Class Frex {
 
 	}
 
+	private function implement_controller_method($implementation_method_pattern, $argument=null) {
+
+		// get controllers files
+		$controllers_files = array_diff(scandir('controllers'), array('..', '.'));
+
+
+		// prepare controller and method names
+		$split_call_chunks = explode(':', $implementation_method_pattern);
+		$controller_name = $split_call_chunks[0];
+		$method_name = $split_call_chunks[1];
+
+		// initial value for checking of passed controllers
+		$is_any_controller_pass = false;
+		$controller_file_index = 0;
+
+		// check and select controller
+		foreach($controllers_files as $index => $controller_file) {
+
+			// increase controller index value
+			$controller_file_index++;
+
+			// check for controller if it's exist
+			if ($controller_name == substr($controller_file, 0, -4)) {
+				
+				// there is one controller at least is passed
+				if ($is_any_controller_pass == false) {
+					$is_any_controller_pass = true;
+				}
+
+				// require controller from controllers' directory
+				require 'controllers/'.$controller_file;
+
+				// implement controller method
+				$controller = new $controller_name();
+				$controller->$method_name($argument);
+
+			} else {
+
+				// write error message if controller not exist (no controller is passed)
+				if ($is_any_controller_pass == false && count($controllers_files) == $controller_file_index) {
+					echo 'Controller is not exist';
+				}
+
+			}
+
+		}
+
+	}
+
 	// constructor
 	public function Frex() {
 		$this->load('Controller.php');
-		$this->_controller_class = new Controller();
 	}
 
 	// log mode
@@ -126,9 +173,9 @@ Class Frex {
 					} else  {
 						
 						if ($this->_route_method_arguments[$key] != null) {
-							$this->_controller_class->implement($this->_route_methods[$key], $this->_route_method_arguments[$key]);
+							$this->implement_controller_method($this->_route_methods[$key], $this->_route_method_arguments[$key]);
 						} else {
-							$this->_controller_class->implement($this->_route_methods[$key]);
+							$this->implement_controller_method($this->_route_methods[$key]);
 						}
 
 					}
