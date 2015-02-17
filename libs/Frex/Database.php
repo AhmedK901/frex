@@ -67,10 +67,15 @@ Class Database {
 		}
  	}
 
- 	// return mysql query
- 	public function get_query_value($query) {
+ 	// return a value from mysql query
+ 	public function get_value_from_query($query) {
  		$this->query($query);
  		return $this->output_value();
+ 	}
+
+ 	public function get_data_from_query($query) {
+ 		$this->query($query);
+ 		return $this->output();
  	}
 
  	// validate mysql query
@@ -121,6 +126,7 @@ Class Database {
 
  	// close database connection
  	public function close() {
+ 		$this->clear();
  		$this->db_connect->close();
  	}
 
