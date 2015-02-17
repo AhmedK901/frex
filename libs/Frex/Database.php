@@ -35,10 +35,6 @@ Class Database {
 		$this->connect();
 	}
 
-	public function check() {
-		echo $this->db_connect. '/';
-	}
-
 	// connect to database
 	public function connect() {
 
@@ -47,7 +43,13 @@ Class Database {
 
 		// check for connection
 		if ($this->db_connect->connect_error) {
-			die('Failed to connect to MySQL: ' . $this->db_connect->connect_error);
+
+			if (DEBUG_MODE == true) {
+				die('Failed to connect to MySQL: ' . $this->db_connect->connect_error);
+			} else {
+				die('Failed to connect to MySQL.');
+			}
+			
 		}
 
 		$this->db_connect->query("SET NAMES utf8;");
@@ -58,10 +60,17 @@ Class Database {
 
 	// write mysql query
 	public function query($query) {
+
 		if (strlen($query) != 0) {
 			// make a query
 			$this->expected_query = $query;
 		}
+ 	}
+
+ 	// return mysql query
+ 	public function get_query_value($query) {
+ 		$this->query($query);
+ 		return $this->output_value();
  	}
 
  	// validate mysql query
@@ -109,5 +118,11 @@ Class Database {
  	public function clear() {
  		$this->expected_query = '';
  	}
+
+ 	// close database connection
+ 	public function close() {
+ 		$this->db_connect->close();
+ 	}
+
 }
 ?>

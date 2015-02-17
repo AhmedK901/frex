@@ -38,6 +38,22 @@ Class Controller {
 		$this->require_models();
 	}
 
+	// redirect to another location
+	public function redirect($location, $in_app_path=true) {
+		if ($in_app_path == true) {
+			$url = 'http://';
+			$url.=$_SERVER['HTTP_HOST'];
+			$url.=$_SERVER['PHP_SELF'];
+			$url=substr($url, 0, -10);
+			$url.=$location;
+			header("Location: $url");
+			exit(0);
+		} else {
+			header("Location: $location");
+			exit(0);
+		}
+	}
+
 
 }
 ?>

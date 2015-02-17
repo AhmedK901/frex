@@ -9,6 +9,7 @@ $app = new Frex();
 $app->set('/');
 $app->set('/main', 'MainController:main'); // pass controller's method 
 $app->set('/main/about', 'MainController:about'); // pass anthoer controller's method
+$app->set('/user', 'UserController:toMainPage');
 $app->set('/user/:id', 'UserController:printUserInfo'); // pass controller's method with argument
 $app->set('/contact', function() { // pass a function
 	echo 'You can contact me!';
