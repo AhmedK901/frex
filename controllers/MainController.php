@@ -7,7 +7,9 @@ Class MainController extends Controller {
 	}
 
 	public function about() {
-		echo 'About me ..';
+		
+		// redirect to main page
+		Controller::redirect('/main');
 	}
 
 }

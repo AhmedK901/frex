@@ -2,34 +2,61 @@
 
 Class UserController extends Controller {
 
-	public function toMainPage() {
-		
-		// redirect to main page
-		Controller::redirect('/main');
-	}
-
 	public function listCurrentUsers() {
 
-		echo '## Current Users ##' . '<br>';
+		// set presentation type to plain-text format (content-type)
+		Presentation::presentation_type('plain-text');
 
-		// set user information array
-		$userinfo = UserModel::getCurrentUsers();
+		// set users information array
+		$users_info = UserModel::getCurrentUsersData();
 
-		
-		// list user information
-		for ($i = 0; $i < count($userinfo); $i++) {
-			echo 'User ID: ' . $userinfo[$i]['user_id'] . '<br>';
-			echo 'Username: ' . $userinfo[$i]['user_name'] . '<br>';
-			echo 'User Email: ' . $userinfo[$i]['user_email'] . '<br>';
-			echo '--------------------------------------' . '<br>';
+		// output user information
+		for ($i = 0; $i < count($users_info); $i++) {
+			echo 'User ID: ' . $users_info[$i]['user_id'] . "\n";
+			echo 'Username: ' . $users_info[$i]['user_name'] . "\n";
+			echo 'User Email: ' . $users_info[$i]['user_email'] . "\n";
+
+			if ($i != count($users_info) - 1) {
+				echo '--------------------------------------' . "\n";	
+			}
+			
 		}
 
 	}
 
-	public function printUserInfo($id) {
+	public function listCurrentUsersInJson() {
+
+		// set presentation type to json format (content-type)
+		Presentation::presentation_type('application/json');
+
+		// set users information array
+		$users_info = UserModel::getCurrentUsersData();
+
+		// output users information in json format
+		Presentation::present_data($users_info, 'application/json');
+
+	}
+
+	public function listUser($id) {
+
+		// get username by passing user id to model
 		$username = UserModel::getUserName($id);
 
+		// output username
 		echo 'Username is ' . $username;
+
+	}
+
+	public function listUserInfoInJson($id) {
+
+		// set presentation type to json format (content-type)
+		Presentation::presentation_type('application/json');
+
+		// set user information array
+		$user_info = UserModel::getSpecificUserData($id);
+
+		// output user information in json format
+		Presentation::present_data($user_info, 'application/json');
 
 	}
 

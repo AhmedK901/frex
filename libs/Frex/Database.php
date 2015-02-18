@@ -18,25 +18,7 @@ Class Database {
 	private $db_connect;
 	private $expected_query = '';
 
-	public function test() {
-		echo 'test .. ';
-	}
-
-	// constructor
-	public function Database() {
-
-		// set mysql configuration values
-		$this->db_host = DB_HOST;
-		$this->db_name = DB_NAME;
-		$this->db_user = DB_USER;
-		$this->db_pass = DB_PASS;
-
-		// make a connection
-		$this->connect();
-	}
-
-	// connect to database
-	public function connect() {
+	private function connect() {
 
 		// include connection on private db_connect variable
 		$this->db_connect = new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
@@ -55,11 +37,9 @@ Class Database {
 		$this->db_connect->query("SET NAMES utf8;");
 		$this->db_connect->query("SET CHARACTER_SET utf8;");
 
-
 	}
 
-	// write mysql query
-	public function query($query) {
+	private function query($query) {
 
 		if (strlen($query) != 0) {
 			// make a query
@@ -67,34 +47,8 @@ Class Database {
 		}
  	}
 
- 	// return a value from mysql query
- 	public function get_value_from_query($query) {
- 		$this->query($query);
- 		return $this->output_value();
- 	}
 
- 	public function get_data_from_query($query) {
- 		$this->query($query);
- 		return $this->output();
- 	}
-
- 	// validate mysql query
- 	public function validate($value) {
- 		//$this->expected_query = mysqli_real_escape_string($this->expected_query);
- 		return $this->db_connect->real_escape_string($value);
- 	}
-
- 	// execute mysql query
- 	public function execute() {
- 		if (strlen($this->expected_query) != 0) {
- 			return $this->db_connect->query($this->expected_query);
- 		}
-
- 		return false;
- 	}
-
- 	// output query result
- 	public function output() {
+ 	private function output() {
  		if (strlen($this->expected_query) != 0) {
  			$result = $this->db_connect->query($this->expected_query);
  			return $result;
@@ -103,8 +57,7 @@ Class Database {
  		return false;
  	}
 
- 	// output on query value
- 	public function output_value($value_num=null) {
+ 	private function output_value($value_num=null) {
  		if (strlen($this->expected_query) != 0) {
  			$result = $this->db_connect->query($this->expected_query);
 
@@ -117,6 +70,48 @@ Class Database {
  			}
  			
  		}
+ 	}
+
+	// constructor
+	public function Database() {
+
+		// set mysql configuration values
+		$this->db_host = DB_HOST;
+		$this->db_name = DB_NAME;
+		$this->db_user = DB_USER;
+		$this->db_pass = DB_PASS;
+
+		// make a connection
+		$this->connect();
+	}
+
+ 	// return a value from mysql query (one value)
+ 	public function get_value_from_query($query) {
+ 		$this->query($query);
+ 		return $this->output_value();
+ 	}
+
+ 	// return data from mysql query (not specified number of values)
+ 	public function get_data_from_query($query) {
+ 		$this->query($query);
+ 		return $this->output();
+ 	}
+
+ 	// return asoociative data from mysql query (not specified number of values)
+ 	public function get_associative_data_from_query($query) {
+ 		$data = array();
+ 		$this->query($query);
+ 		$result = $this->output();
+ 		while ($row = $result->fetch_assoc()) {
+ 			$data[] = $row;
+ 		}
+ 		return $data;
+ 	}
+
+ 	// validate mysql query
+ 	public function validate($value) {
+ 		//$this->expected_query = mysqli_real_escape_string($this->expected_query);
+ 		return $this->db_connect->real_escape_string($value);
  	}
 
  	// clear last mysql query

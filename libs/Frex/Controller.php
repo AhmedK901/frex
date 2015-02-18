@@ -5,6 +5,9 @@
  *	Handling controllers in Frex micro-framework and prepare all models to be used for them
 **/
 
+// use presentation methods in controllers
+require 'Presentation.php';
+
 // model is required as a superclass for all models available on app
 require 'Model.php';
 
