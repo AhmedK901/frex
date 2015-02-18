@@ -39,11 +39,24 @@ Class UserController extends Controller {
 
 	public function listUser($id) {
 
+		// get id by passing user id to model
+		$id = UserModel::getUserInfo($id, 'id');
+
+		// output id
+		echo 'ID: ' . $id . '<br>';
+
 		// get username by passing user id to model
-		$username = UserModel::getUserName($id);
+		$username = UserModel::getUserInfo($id, 'username');
 
 		// output username
-		echo 'Username is ' . $username;
+		echo 'Username: ' . $username . '<br>';
+
+		// get email by passing user id to model
+		$email = UserModel::getUserInfo($id, 'email');
+
+		// output email
+		echo 'Email: ' . $email . '<br>';
+
 
 	}
 

@@ -35,7 +35,7 @@ Class UserModel extends Model {
 		return $userdata;
 	}
 
-	public function getUserName($id) {
+	public function getUserInfo($id, $type) {
 
 		// connect to database
 		$database = new Database();
@@ -43,14 +43,21 @@ Class UserModel extends Model {
 		// validata id GET variable
 		$id = $database->validate($id);
 
-		// get username from user id
-		$username = $database->get_value_from_query("SELECT user_name FROM users WHERE user_id = '$id'");
+		// get information from user id
+		$info_type = $database->get_associative_data_from_query("SELECT user_id, user_name, user_email FROM users WHERE user_id = '$id'");
 
 		// close database connection
 		$database->close();
 
-		// return username to controller
-		return $username;
+		// return information type value to controller
+		if ($type == 'username') {
+			return $info_type[0]['user_name'];
+		} else if ($type == 'email') {
+			return $info_type[0]['user_email'];
+		} else if ($type == 'id') {
+			return $info_type[0]['user_id'];
+		}
+		
 
 	}
 }

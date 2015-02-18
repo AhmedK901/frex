@@ -10,6 +10,7 @@ Class MainController extends Controller {
 		
 		// redirect to main page
 		Controller::redirect('/main');
+		
 	}
 
 }
