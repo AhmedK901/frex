@@ -126,8 +126,12 @@ Class Frex {
 	}
 
 	// load specific Frex class
-	public function load($classfile) {
-		require $classfile;
+	public function load($classfile, $once=false) {
+		if ($once == true) {
+			require_once $classfile;
+		} else {
+			require $classfile;
+		}
 	}
 
 	// set new route
