@@ -94,7 +94,7 @@ Class Frex {
 				}
 
 				// require controller from controllers' directory
-				require 'controllers/'.$controller_file;
+				require_once 'controllers/'.$controller_file;
 
 				// implement controller method
 				$controller = new $controller_name();

@@ -1,6 +1,6 @@
 <?php
 
-require 'libs/Frex/Frex.php';
+require_once 'libs/Frex/Frex.php';
 
 // initialize the app
 $app = new Frex();

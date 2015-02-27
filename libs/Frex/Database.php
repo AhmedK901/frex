@@ -6,7 +6,7 @@
 **/
 
 // include database configuration file
-include 'database_config.php';
+require_once 'database_config.php';
 
 Class Database {
 

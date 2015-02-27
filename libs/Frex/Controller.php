@@ -6,7 +6,7 @@
 **/
 
 // use presentation methods in controllers
-require 'Presentation.php';
+require_once 'Presentation.php';
 
 // model is required as a superclass for all models available on app
 require 'Model.php';
@@ -22,7 +22,7 @@ Class Controller {
 
 			// require all models available
 			foreach($this->_models_files as $index => $model) {
-				require 'models/'.$model;
+				require_once 'models/'.$model;
 			} 
 		}
 		

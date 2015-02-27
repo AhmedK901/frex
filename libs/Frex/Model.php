@@ -5,7 +5,7 @@
  *	Handling models in Frex micro-framework
 **/
 
-require 'Database.php';
+require_once 'Database.php';
 Class Model {
 	
 	// constructor
