@@ -17,20 +17,63 @@ Class Frex {
 		return isset($_GET['uri']) ? '/'. $_GET['uri'] : '/';
 	}
 
-	private function getMethodArgumentName($url) { // get any provided argument name from route
-		$expectedURIParam = explode(':', $url);
+	private function getMethodArgumentsName($url) { // get any provided argument name from route
+		
+		// separate route uri parameters
+		$expectedURIParam = explode('/', $url);
 
+		// create arguments names array
+		$argumentsNames = array();
+
+		// check if there is route uri parameters
 		if (count($expectedURIParam) > 1) {
-			return $expectedURIParam[1];
+				
+				for ($i=0; $i<count($expectedURIParam); $i++) {
+
+						// check if there arguments in route uri parameters
+						if (preg_match("#^:[A-Za-z]+$#", $expectedURIParam[$i])) {
+
+							// add argument to arguments names array
+							$argumentsNames[] = trim($expectedURIParam[$i], ':');
+						}
+				}
+
+				// return arguments names array
+				return $argumentsNames;
+
 		} else {
-			return null;
+
+				return null;
+
 		}
 		
 	}
 
 	private function getMethodArgumentValue($localURI, $getURI) {
-		$uriParams = explode(':', $localURI);
-		return str_replace($uriParams[0], '', $getURI);
+
+		// create route uri keys
+		$uriParamsKeys = array_values(array_diff(explode('/', $localURI), array('')));
+
+		// create route uril values (expected GET arguments values)
+		$argumentsNames = array_values(array_diff(explode('/', $getURI), array('')));
+
+		// create GET arguments array
+		$getArguments = array();
+
+		for ($i=0; $i<count($uriParamsKeys); $i++) {
+
+				// check if there arguments in route uri parameters
+				if (preg_match("#^:[A-Za-z]+$#", $uriParamsKeys[$i])) {
+
+					// add argument to GET arguments array
+					$getArguments[trim($uriParamsKeys[$i], ':')] = $argumentsNames[$i];
+
+				}
+		}
+
+		// return GET arguments array
+		return $getArguments;
+
 	}
 
 	private function checkURIPattern($localURI, $getURI) { // match route and get URIs and return the result
@@ -39,15 +82,23 @@ Class Frex {
 		$uriMatchPattern;
 
 		// final URI parameter expression variable
-		$expectedURIParam = $this->getMethodArgumentName($localURI);
+		$expectedURIParam = $this->getMethodArgumentsName($localURI);
+		
 
-		if ($expectedURIParam != null) {
+		if (count($expectedURIParam) != 0) {
 
-			// replace current argument alias with expected expression
-			$expectedURIParam = str_replace(":$expectedURIParam","([0-9A-Za-z_\#@.]+)",$localURI);
+			// assign new expected url parameters to local uri
+			$newExpectedURIParam = $localURI;
+
+			for ($i = 0; $i < count($expectedURIParam); $i++) {
+
+					// replace current argument alias with expected expression
+				$newExpectedURIParam = str_replace(":".$expectedURIParam[$i],"([0-9A-Za-z_\#@.]+)",$newExpectedURIParam);
+
+			}
 			
 			// final match pattern to be checked
-			$uriMatchPattern = "#^$expectedURIParam\/?$#";
+			$uriMatchPattern = "#^$newExpectedURIParam\/?$#";
 
 		} else {
 
@@ -57,9 +108,13 @@ Class Frex {
 
 		// check for final match pattern with current GET URI
 		if (preg_match($uriMatchPattern, $getURI)) {
+
 			return true;
+
 		} else {
+
 			return false;
+
 		}
 
 	}
@@ -123,15 +178,18 @@ Class Frex {
 		
 		print('<br>');
 		print('['.$message.']');
+
 	}
 
 	// load specific Frex class
 	public function load($classfile, $once=false) {
+
 		if ($once == true) {
 			require_once $classfile;
 		} else {
 			require $classfile;
 		}
+
 	}
 
 	// set new route
@@ -154,6 +212,7 @@ Class Frex {
 		// get and prepare uri param
 		$uriGetParam = $this->getGetUri();
 
+
 		// check if route value is match with with uri GET parameter 
 		foreach($this->_route_uri as $key => $value) {	
 
@@ -168,18 +227,26 @@ Class Frex {
 					// select type of method return (single function / controller method)
 					if (is_callable($this->_route_methods[$key])) {
 						
-						if ($this->_route_method_arguments[$key] != null) {
+						if (count($this->_route_method_arguments[$key]) != 0) {
+
 							$this->_route_methods[$key]($this->_route_method_arguments[$key]);
+
 						} else {
+
 							$this->_route_methods[$key]();
+
 						}
 
 					} else  {
 						
-						if ($this->_route_method_arguments[$key] != null) {
+						if (count($this->_route_method_arguments[$key]) != 0) {
+
 							$this->implement_controller_method($this->_route_methods[$key], $this->_route_method_arguments[$key]);
+
 						} else {
+
 							$this->implement_controller_method($this->_route_methods[$key]);
+
 						}
 
 					}
@@ -196,7 +263,7 @@ Class Frex {
 
 		}
 
-		// give not found message if no any uri params match setted uri route
+		// give not found message if no any uri parameter match setted uri route
 		if ($this->_is_any_set_uri == false) {
 			$this->log('Not Page Found');
 		}

@@ -18,9 +18,14 @@ $app->set('/main/about', 'MainController:about');
 $app->set('/user', 'UserController:listCurrentUsers');
 $app->set('/json/user', 'UserController:listCurrentUsersInJson');
 
-// pass controller's method with argument
+// pass controller's method with one argument
 $app->set('/user/:id', 'UserController:listUser');
 $app->set('/json/user/:id', 'UserController:listUserInfoInJson');
+
+// pass controller's method with more than one argument
+$app->set('/welcome/:first/:last', function($data) {
+		echo 'Hello ' . $data['first'] . ' ' . $data['last'] . '!';
+});
 
 // pass a function
 $app->set('/contact', function() {

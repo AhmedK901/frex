@@ -37,22 +37,22 @@ Class UserController extends Controller {
 
 	}
 
-	public function listUser($id) {
+	public function listUser($data) {
 
 		// get id by passing user id to model
-		$id = UserModel::getUserInfo($id, 'id');
+		$user_id = UserModel::getUserInfo($data['id'], 'id');
 
 		// output id
-		echo 'ID: ' . $id . '<br>';
+		echo 'ID: ' . $user_id . '<br>';
 
 		// get username by passing user id to model
-		$username = UserModel::getUserInfo($id, 'username');
+		$username = UserModel::getUserInfo($data['id'], 'username');
 
 		// output username
 		echo 'Username: ' . $username . '<br>';
 
 		// get email by passing user id to model
-		$email = UserModel::getUserInfo($id, 'email');
+		$email = UserModel::getUserInfo($data['id'], 'email');
 
 		// output email
 		echo 'Email: ' . $email . '<br>';
@@ -60,13 +60,13 @@ Class UserController extends Controller {
 
 	}
 
-	public function listUserInfoInJson($id) {
+	public function listUserInfoInJson($data) {
 
 		// set presentation type to json format (content-type)
 		Presentation::presentation_type('application/json');
-
+		
 		// set user information array
-		$user_info = UserModel::getSpecificUserData($id);
+		$user_info = UserModel::getSpecificUserData($data['id']);
 
 		// output user information in json format
 		Presentation::present_data($user_info, 'application/json');
