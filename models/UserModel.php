@@ -8,7 +8,7 @@ Class UserModel extends Model {
 		$database = new Database();
 
 		// get user data from mysql query
-		$userinfo = $database->get_associative_data_from_query("SELECT user_id, user_name, user_email FROM users ORDER BY user_id ASC");
+		$userinfo = $database->query_assoc("SELECT user_id, user_name, user_email FROM users ORDER BY user_id ASC");
 
 		// close database connection
 		$database->close();
@@ -26,7 +26,7 @@ Class UserModel extends Model {
 		$id = $database->validate($id);
 
 		// get user data from user id
-		$userdata = $database->get_associative_data_from_query("SELECT user_id, user_name, user_email FROM users WHERE user_id = '$id'");
+		$userdata = $database->query_assoc("SELECT user_id, user_name, user_email FROM users WHERE user_id = '$id'");
 
 		// close database to controller
 		$database->close();
@@ -44,7 +44,7 @@ Class UserModel extends Model {
 		$id = $database->validate($id);
 
 		// get information from user id
-		$info_type = $database->get_associative_data_from_query("SELECT user_id, user_name, user_email FROM users WHERE user_id = '$id'");
+		$info_type = $database->query_assoc("SELECT user_id, user_name, user_email FROM users WHERE user_id = '$id'");
 
 		// close database connection
 		$database->close();

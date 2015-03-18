@@ -39,7 +39,7 @@ Class Database {
 
 	}
 
-	private function query($query) {
+	private function set_query($query) {
 
 		if (strlen($query) != 0) {
 			// make a query
@@ -86,21 +86,21 @@ Class Database {
 	}
 
  	// return a value from mysql query (one value)
- 	public function get_value_from_query($query) {
- 		$this->query($query);
+ 	public function query_value($query) {
+ 		$this->set_query($query);
  		return $this->output_value();
  	}
 
  	// return data from mysql query (not specified number of values)
- 	public function get_data_from_query($query) {
- 		$this->query($query);
+ 	public function query($query) {
+ 		$this->set_query($query);
  		return $this->output();
  	}
 
  	// return asoociative data from mysql query (not specified number of values)
- 	public function get_associative_data_from_query($query) {
+ 	public function query_assoc($query) {
  		$data = array();
- 		$this->query($query);
+ 		$this->set_query($query);
  		$result = $this->output();
  		while ($row = $result->fetch_assoc()) {
  			$data[] = $row;

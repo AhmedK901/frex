@@ -47,21 +47,19 @@ Class Presentation {
 		}
 	}
 
-	// set HTTP header
-	public function set_http_header() {
+	// include php input data in specific format
+	public function input_data_as_json() {
 
-		// nested method
-		function authentication() {
+		// set input data
+		$input_data = file_get_contents('php://input');
 
-		}
+		if (strlen($input_data) > 2) {
 
-		function content_type() {
-
-		}
-
-		function set_origin() {
+			// return input data in JSON format
+			return json_decode($input_data);
 
 		}
+		
 
 	}
 
