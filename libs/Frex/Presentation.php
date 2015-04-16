@@ -68,18 +68,17 @@ Class Presentation {
 				// use all available GET data in HTML content
 				foreach ($data as $key => $value) {
 
-					// check if there is any template variable that similar to GET data keys as a name
-					if (preg_match("#\{[A-Za-z0-9]+\}#", '{' . $key . '}')) {
-
-						// replace any template variable with available GET data
-						$htmlfile = preg_replace("#\{[A-Za-z0-9]+\}#", $value, $htmlfile);
-						print_r($htmlfile);
-					}
+					// replace any template variable with available GET data
+					$htmlfile = str_replace("{$key}", $value, $htmlfile);
 
 				}
 
+				// reset any template variable prefix and suffix
+				$htmlfile = str_replace("{", "", $htmlfile);
+				$htmlfile = str_replace("}", "", $htmlfile);
+
 				// output new HTML code
-				//echo $htmlfile;
+				print($htmlfile);
 
 			}
 
