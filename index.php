@@ -42,12 +42,6 @@ $app->set('/greet/:first/:last', function ($data) {
 	Presentation::present_view('my-name.html', $data);
 });
 
-$app->set('test', function () {
-	//echo preg_match("#\{[A-Za-z0-9]+\}#", '{id}');
-
-	echo str_replace('{name}', 'Ahmed', 'Hi {name}');
-});
-
 // run the app!
 $app->run();
 

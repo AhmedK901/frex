@@ -3,7 +3,7 @@
 /**
  *	Class: Database Class
  *	Handling MySQL database stuff in Frex micro-framework
-**/
+ **/
 
 // include database configuration file
 require_once 'database_config.php';
@@ -31,7 +31,7 @@ Class Database {
 			} else {
 				die('Failed to connect to MySQL.');
 			}
-			
+
 		}
 
 		$this->db_connect->query("SET NAMES utf8;");
@@ -45,32 +45,37 @@ Class Database {
 			// make a query
 			$this->expected_query = $query;
 		}
- 	}
+	}
 
+	private function output() {
+		if (strlen($this->expected_query) != 0) {
+			$result = $this->db_connect->query($this->expected_query);
+			return $result;
+		}
 
- 	private function output() {
- 		if (strlen($this->expected_query) != 0) {
- 			$result = $this->db_connect->query($this->expected_query);
- 			return $result;
- 		}
+		return false;
+	}
 
- 		return false;
- 	}
+	private function output_value($value_num = null) {
+		if (strlen($this->expected_query) != 0) {
+			$result = $this->db_connect->query($this->expected_query);
 
- 	private function output_value($value_num=null) {
- 		if (strlen($this->expected_query) != 0) {
- 			$result = $this->db_connect->query($this->expected_query);
+			if ($value_num == null) {
 
- 			if ($value_num == null) {
- 				return $result->fetch_row()[0];
- 			} else {
- 				while ($row = $result->fetch_row()) {
-	 				return $row[$value_num];
-	 			}	
- 			}
- 			
- 		}
- 	}
+				// working on 5.4 and above
+				//return $result->fetch_row()[0];
+
+				list($first_value_of_row) = $result->fetch_row();
+				return $first_value_of_row;
+
+			} else {
+				while ($row = $result->fetch_row()) {
+					return $row[$value_num];
+				}
+			}
+
+		}
+	}
 
 	// constructor
 	public function Database() {
@@ -85,45 +90,45 @@ Class Database {
 		$this->connect();
 	}
 
- 	// return a value from mysql query (one value)
- 	public function query_value($query) {
- 		$this->set_query($query);
- 		return $this->output_value();
- 	}
+	// return a value from mysql query (one value)
+	public function query_value($query) {
+		$this->set_query($query);
+		return $this->output_value();
+	}
 
- 	// return data from mysql query (not specified number of values)
- 	public function query($query) {
- 		$this->set_query($query);
- 		return $this->output();
- 	}
+	// return data from mysql query (not specified number of values)
+	public function query($query) {
+		$this->set_query($query);
+		return $this->output();
+	}
 
- 	// return asoociative data from mysql query (not specified number of values)
- 	public function query_assoc($query) {
- 		$data = array();
- 		$this->set_query($query);
- 		$result = $this->output();
- 		while ($row = $result->fetch_assoc()) {
- 			$data[] = $row;
- 		}
- 		return $data;
- 	}
+	// return asoociative data from mysql query (not specified number of values)
+	public function query_assoc($query) {
+		$data = array();
+		$this->set_query($query);
+		$result = $this->output();
+		while ($row = $result->fetch_assoc()) {
+			$data[] = $row;
+		}
+		return $data;
+	}
 
- 	// validate mysql query
- 	public function validate($value) {
- 		//$this->expected_query = mysqli_real_escape_string($this->expected_query);
- 		return $this->db_connect->real_escape_string($value);
- 	}
+	// validate mysql query
+	public function validate($value) {
+		//$this->expected_query = mysqli_real_escape_string($this->expected_query);
+		return $this->db_connect->real_escape_string($value);
+	}
 
- 	// clear last mysql query
- 	public function clear() {
- 		$this->expected_query = '';
- 	}
+	// clear last mysql query
+	public function clear() {
+		$this->expected_query = '';
+	}
 
- 	// close database connection
- 	public function close() {
- 		$this->clear();
- 		$this->db_connect->close();
- 	}
+	// close database connection
+	public function close() {
+		$this->clear();
+		$this->db_connect->close();
+	}
 
 }
 ?>
